@@ -1,0 +1,29 @@
+html
+	head
+		title= title 
+	body
+		div(style = {"padding":"20px"})
+			
+			form#formSubmit
+				label(for="idField") Id :
+				input(
+  				type='text'
+  				name='id',value="" id="inputId" placeholder="Id")
+				button(type="submit" id="formId") punch In
+		script.
+			const formDataEle = document.getElementById('formSubmit')
+			formDataEle.addEventListener('submit',preventDefaultActionFun)
+			function preventDefaultActionFun(event){
+				event.preventDefault()
+			}
+			const submitE1 = document.getElementById('formId')
+			submitE1.addEventListener('click',myFormFunction)
+			function myFormFunction(event){
+				submitE1.textContent = "punch Out"
+				const idValue = inputId.value
+				console.log(idValue)
+			}
+			
+
+
+				

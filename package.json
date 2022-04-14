@@ -1,11 +1,12 @@
 {
-  "name": "EJS",
+  "name": "Punchin/out-system",
   "version": "1.0.0",
-  "description": "This is the file for EJS practice.",
+  "description": "This is the for employee punch in/out system ",
   "main": "index.js",
   "dependencies": {
     "ejs": "^3.1.6",
     "express": "^4.17.3",
+    "mongoose": "^6.2.11",
     "pug": "^3.0.2"
   },
   "devDependencies": {},
