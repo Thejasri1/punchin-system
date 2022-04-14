@@ -19,9 +19,6 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 app.get("/api/punch", (_, res) => {
-  // res.send("home page");
-  // res.sendFile(path.join(__dirname, "views/index.html"));
-
   res.render("punchIn", {
     title: "PunchIn/Out-system",
   });

@@ -11,15 +11,17 @@ html
   				name='id',value="" id="inputId" placeholder="Id")
 				button(type="submit" id="formId") punch In
 		script.
-			const formDataEle = document.getElementById('formSubmit')
-			formDataEle.addEventListener('submit',preventDefaultActionFun)
+			const formDataElement = document.getElementById('formSubmit')
+			formDataElement.addEventListener('submit',preventDefaultActionFun)
 			function preventDefaultActionFun(event){
 				event.preventDefault()
 			}
 			const submitElement = document.getElementById('formId')
 			submitE1.addEventListener('click',myFormFunction)
+			//function for punch in and out
 			function myFormFunction(event){
 				submitElement.textContent = "punch Out"
+				//User enter Id 
 				const idValue = inputId.value
 				console.log(idValue)
 			}
