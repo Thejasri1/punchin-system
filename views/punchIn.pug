@@ -1,0 +1,33 @@
+html
+	head
+		title= title
+		link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css")
+		script(src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js")
+
+		style 
+			include ./punch.css
+	  
+		
+	body
+		div(class="logo-container")
+			img(src="https://www.thejavascriptshop.com/assets/banner1.png" class="logo")
+		div(class="container-element")
+			form#formSubmit(action="/" method="POST")
+				label(for="idField") Enter The ID :
+				br
+				input(
+  				type='hidden'
+  				name='lat',value="" id="lat")
+				input(
+  				type='hidden'
+  				name='long',value="" id="long")
+				input(
+  				type='text'
+  				name='id',value="" id="inputId" placeholder="Id" class="form-control")
+				
+				br
+				button(type="submit" id="formId" class="btn") 
+				
+		script
+			include punchIn.js
+		
