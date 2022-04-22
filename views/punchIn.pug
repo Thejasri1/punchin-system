@@ -1,17 +1,23 @@
 html
 	head
 		title= title 
+		style 
+			include ./punch.css
+		
 	body
-		div(style = {"padding":"20px"})
-			
+		div(class="logo-container")
+			img(src="https://www.thejavascriptshop.com/assets/banner1.png" class="logo")
+		div(class="container-element")
 			form#formSubmit(action="/punch" method="POST")
-				label(for="idField") Id :
+				label(for="idField") Enter The ID :
+				br
 				input(
   				type='text'
-  				name='id',value="" id="inputId" placeholder="Id")
-				button(type="submit" id="formId") punch In
-		
-
+  				name='id',value="" id="inputId" placeholder="Id" class="form-control")
+				br
+				button(type="submit" id="formId" class="btn")
+		script
+			include punchIn.js
 
 
 				
