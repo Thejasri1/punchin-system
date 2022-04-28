@@ -21,6 +21,7 @@ window.addEventListener("load", function () {
     }
   };
 });
+
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition, showError);
