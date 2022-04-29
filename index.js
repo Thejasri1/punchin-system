@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 app.use(useragent.express());
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 //punch in landing page method:
 app.get("/", (_, res) => {
@@ -48,12 +49,6 @@ const employees = {
 app.post("/", async (req, res) => {
   //if data is empty it will not store the data into db instead it will redirect to the home page
   if (req.body.id === "") return res.redirect("/");
-
-  //IP Address :
-  const clientIp = requestIp.getClientIp(req);
-  //userAgent :
-  const userAgent = JSON.stringify(req.useragent);
-
   //current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
@@ -64,6 +59,7 @@ app.post("/", async (req, res) => {
     },
   };
   let latestEntry = undefined;
+  //location of the employee:
   const api = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${req.body.lat},${req.body.long}&key=${process.env.GOOGLE_API_KEY}`;
   let results;
   const getAddressByReverseCoding = async () => {
@@ -76,6 +72,21 @@ app.post("/", async (req, res) => {
     }
   };
   await getAddressByReverseCoding();
+  //IP Address :
+  const clientIp = requestIp.getClientIp(req);
+  //userAgent :
+  const userAgentMobileOrDesktop =
+    req.useragent.isMobile === true ? "Mobile" : "Desktop";
+  const userAgent =
+    req.useragent.os +
+    "," +
+    req.useragent.platform +
+    "," +
+    req.useragent.browser +
+    "," +
+    userAgentMobileOrDesktop +
+    "," +
+    req.useragent.source;
 
   //Database connection:
   mongoose.connect(url, async (_, db) => {
@@ -131,18 +142,14 @@ app.post("/", async (req, res) => {
     // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
     const conversationId = process.env.CONVERSATION_ID;
 
-    try {
-      await web.chat.postMessage({
-        channel: conversationId,
-        text: `User : ${employees[req.body.id] || "Unknown"} \n ${
-          latestEntry === "Punch In" ? "Punch Out" : "Punch In"
-        } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
-          req.body.long
-        }\n IP Address: ${clientIp} \n User Agent: ${userAgent}`,
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    await web.chat.postMessage({
+      channel: conversationId,
+      text: `User : ${employees[req.body.id] || "Unknown"} \n ${
+        latestEntry === "Punch In" ? "Punch Out" : "Punch In"
+      } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
+        req.body.long
+      }\n IP Address: ${clientIp} \n User Agent: ${userAgent}`,
+    });
 
     //after executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");

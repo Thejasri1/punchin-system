@@ -1,5 +1,26 @@
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function () {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+//spinner logic:
+const spinner = () => {
+  document.getElementById("loader").classList.toggle("loader");
+};
+
 window.addEventListener("load", function () {
   const button = document.getElementById("formId");
+  button.addEventListener("click", spinner);
+
   button.textContent =
     localStorage.getItem("punchState") === "Punch In"
       ? "Punch Out"
@@ -15,31 +36,23 @@ window.addEventListener("load", function () {
         document.getElementById("lat").value = position.coords.latitude;
         document.getElementById("long").value = position.coords.longitude;
         form.submit();
-      }, showError);
-    } else {
-      console.log("Browser does not support geolocation");
+      });
     }
   };
 });
-
-function getLocation() {
+//getting the latitude longitude :
+const getLocation = () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    console.log("Browser does not support geolocation");
+    navigator.geolocation.getCurrentPosition(showPosition);
   }
-}
-function showPosition(position) {
+};
+const showPosition = (position) => {
   localStorage.setItem("lat", position.coords.latitude);
   localStorage.setItem("long", position.coords.longitude);
   document.getElementById("lat").value = position.coords.latitude;
   document.getElementById("long").value = position.coords.longitude;
-}
-function showError(error) {
-  if (error.PERMISSION_DENIED) {
-    console.log(" The user have denied the request for geolocation.");
-  }
-}
+};
+
 getLocation();
 const sendNotifcation = () => {
   new Notify({

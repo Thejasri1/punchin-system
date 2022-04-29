@@ -3,6 +3,7 @@ html
 		title= title
 		link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css")
 		script(src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js")
+		link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css")
 
 		style 
 			include ./punch.css
@@ -10,7 +11,45 @@ html
 		
 	body
 		div(class="logo-container")
-			img(src="https://www.thejavascriptshop.com/assets/banner1.png" class="logo")
+			img(src="./public/images/banner.png" class="logo")
+		button(class="accordion")
+			img(src="./public/images/icon.png" class="icon-for-info")
+			p(class="info-caption") Click the Icon for ID's
+		div(class="panel")
+				table
+					tr
+						th ID
+						th Name
+					tr
+						td 000
+						td Priyank  
+					tr 
+						td 001
+						td Chetna
+					tr
+						td 002
+						td Vinay
+					tr
+						td 003
+						td Sridhar
+					tr
+						td 004
+						td Nikunj 
+					tr
+						td 005
+						td Jayanth
+					tr
+						td 006
+						td Avantika
+					tr
+						td 007
+						td Harsh
+					tr
+						td 008
+						td Omprakash
+					tr
+						td 009
+						td Thejasri     
 		div(class="container-element")
 			form#formSubmit(action="/" method="POST")
 				label(for="idField") Enter The ID :
@@ -24,9 +63,10 @@ html
 				input(
   				type='text'
   				name='id',value="" id="inputId" placeholder="Id" class="form-control")
-				
 				br
-				button(type="submit" id="formId" class="btn") 
+				button(type="submit" id="formId" class="btn")
+				
+			div(id="loader")
 				
 		script
 			include punchIn.js
