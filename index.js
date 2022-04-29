@@ -9,6 +9,7 @@ const { WebClient } = require("@slack/web-api");
 const useragent = require("express-useragent");
 const axios = require("axios").default;
 const dotenv = require("dotenv");
+
 const hostname = "127.0.0.1";
 const port = 3000;
 
@@ -29,6 +30,12 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.get("/", (_, res) => {
   return res.render("punchIn", {
     title: "PunchIn/Out-system",
+  });
+});
+//error page if employee login on desktop :
+app.get("/errorpage", (_, res) => {
+  return res.render("errorpage", {
+    title: "error",
   });
 });
 //List of employess :
@@ -74,10 +81,11 @@ app.post("/", async (req, res) => {
   await getAddressByReverseCoding();
   //IP Address :
   const clientIp = requestIp.getClientIp(req);
+
   //userAgent :
   const userAgentMobileOrDesktop =
     req.useragent.isMobile === true ? "Mobile" : "Desktop";
-  const userAgent =
+  const userAgentDetails =
     req.useragent.os +
     "," +
     req.useragent.platform +
@@ -148,7 +156,7 @@ app.post("/", async (req, res) => {
         latestEntry === "Punch In" ? "Punch Out" : "Punch In"
       } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
         req.body.long
-      }\n IP Address: ${clientIp} \n User Agent: ${userAgent}`,
+      }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
     });
 
     //after executing the all the process it will redirect it home page :

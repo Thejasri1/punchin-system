@@ -1,3 +1,9 @@
+const isMobile = /iPhone|iPad|IEMobile|iphone SE|Android/i.test(
+  window.navigator.userAgent
+);
+// if (!isMobile) {
+//   window.location = "/errorpage";
+// }
 var acc = document.getElementsByClassName("accordion");
 var i;
 
