@@ -48,12 +48,6 @@ const employees = {
 app.post("/", async (req, res) => {
   //if data is empty it will not store the data into db instead it will redirect to the home page
   if (req.body.id === "") return res.redirect("/");
-
-  //IP Address :
-  const clientIp = requestIp.getClientIp(req);
-  //userAgent :
-  const userAgent = JSON.stringify(req.useragent);
-
   //current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
@@ -64,6 +58,7 @@ app.post("/", async (req, res) => {
     },
   };
   let latestEntry = undefined;
+  //location of the employee:
   const api = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${req.body.lat},${req.body.long}&key=${process.env.GOOGLE_API_KEY}`;
   let results;
   const getAddressByReverseCoding = async () => {
@@ -76,6 +71,21 @@ app.post("/", async (req, res) => {
     }
   };
   await getAddressByReverseCoding();
+  //IP Address :
+  const clientIp = requestIp.getClientIp(req);
+  //userAgent :
+  const userAgentMobileOrDesktop =
+    req.useragent.isMobile === true ? "isMobile : true" : "isDesktop : true";
+  const userAgent =
+    req.useragent.os +
+    "," +
+    req.useragent.platform +
+    "," +
+    req.useragent.browser +
+    "," +
+    userAgentMobileOrDesktop +
+    "," +
+    req.useragent.source;
 
   //Database connection:
   mongoose.connect(url, async (_, db) => {
@@ -144,7 +154,7 @@ app.post("/", async (req, res) => {
       console.log(e);
     }
 
-    //after executing the all the process it will redirect it home page :
+    // //after executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");
   });
 });

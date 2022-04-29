@@ -1,5 +1,29 @@
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function () {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+
+function spinner() {
+  console.log("in here");
+  console.log(document.getElementById("loader").classList);
+  document.getElementById("loader").classList.toggle("loader");
+  console.log(document.getElementById("loader").classList);
+}
+
 window.addEventListener("load", function () {
   const button = document.getElementById("formId");
+  button.addEventListener("click", spinner);
+
   button.textContent =
     localStorage.getItem("punchState") === "Punch In"
       ? "Punch Out"
@@ -8,6 +32,8 @@ window.addEventListener("load", function () {
   const form = document.getElementById("formSubmit");
   form.onsubmit = function (e) {
     e.preventDefault();
+    // spinner logic
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         localStorage.setItem("punchState", button.textContent);
