@@ -12,13 +12,10 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 }
-
-function spinner() {
-  console.log("in here");
-  console.log(document.getElementById("loader").classList);
+//spinner logic:
+const spinner = () => {
   document.getElementById("loader").classList.toggle("loader");
-  console.log(document.getElementById("loader").classList);
-}
+};
 
 window.addEventListener("load", function () {
   const button = document.getElementById("formId");
@@ -32,8 +29,6 @@ window.addEventListener("load", function () {
   const form = document.getElementById("formSubmit");
   form.onsubmit = function (e) {
     e.preventDefault();
-    // spinner logic
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         localStorage.setItem("punchState", button.textContent);
@@ -41,31 +36,23 @@ window.addEventListener("load", function () {
         document.getElementById("lat").value = position.coords.latitude;
         document.getElementById("long").value = position.coords.longitude;
         form.submit();
-      }, showError);
-    } else {
-      console.log("Browser does not support geolocation");
+      });
     }
   };
 });
-
-function getLocation() {
+//getting the latitude longitude :
+const getLocation = () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    console.log("Browser does not support geolocation");
+    navigator.geolocation.getCurrentPosition(showPosition);
   }
-}
-function showPosition(position) {
+};
+const showPosition = (position) => {
   localStorage.setItem("lat", position.coords.latitude);
   localStorage.setItem("long", position.coords.longitude);
   document.getElementById("lat").value = position.coords.latitude;
   document.getElementById("long").value = position.coords.longitude;
-}
-function showError(error) {
-  if (error.PERMISSION_DENIED) {
-    console.log(" The user have denied the request for geolocation.");
-  }
-}
+};
+
 getLocation();
 const sendNotifcation = () => {
   new Notify({

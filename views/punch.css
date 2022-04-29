@@ -23,9 +23,12 @@
   transition: 0.4s;
   display: flex;
 }
+.icon-for-info {
+  height: 30px;
+  width: 30px;
+}
 .info-caption {
-  font-style: italic;
-  padding-left: 5px;
+  padding: 5px;
 }
 table {
   display: flex;
@@ -39,12 +42,11 @@ td {
   border: 1px solid #000000;
   width: 100px;
   text-align: center;
-  font-style: italic;
 }
 .panel {
   padding: 0 18px;
   display: none;
-  background-color: #eee;
+  background-color: #ffffff;
 }
 .container-element {
   margin-top: 30vh;

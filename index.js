@@ -75,7 +75,7 @@ app.post("/", async (req, res) => {
   const clientIp = requestIp.getClientIp(req);
   //userAgent :
   const userAgentMobileOrDesktop =
-    req.useragent.isMobile === true ? "isMobile : true" : "isDesktop : true";
+    req.useragent.isMobile === true ? "Mobile" : "Desktop";
   const userAgent =
     req.useragent.os +
     "," +
@@ -141,20 +141,16 @@ app.post("/", async (req, res) => {
     // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
     const conversationId = process.env.CONVERSATION_ID;
 
-    try {
-      await web.chat.postMessage({
-        channel: conversationId,
-        text: `User : ${employees[req.body.id] || "Unknown"} \n ${
-          latestEntry === "Punch In" ? "Punch Out" : "Punch In"
-        } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
-          req.body.long
-        }\n IP Address: ${clientIp} \n User Agent: ${userAgent}`,
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    await web.chat.postMessage({
+      channel: conversationId,
+      text: `User : ${employees[req.body.id] || "Unknown"} \n ${
+        latestEntry === "Punch In" ? "Punch Out" : "Punch In"
+      } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
+        req.body.long
+      }\n IP Address: ${clientIp} \n User Agent: ${userAgent}`,
+    });
 
-    // //after executing the all the process it will redirect it home page :
+    //after executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");
   });
 });
