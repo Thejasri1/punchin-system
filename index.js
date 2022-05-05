@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const { WebClient } = require("@slack/web-api");
 const useragent = require("express-useragent");
 const axios = require("axios").default;
+const moment = require("moment");
 const dotenv = require("dotenv");
 
 const hostname = "127.0.0.1";
@@ -26,18 +27,13 @@ app.set("views", path.join(__dirname, "views"));
 app.use(useragent.express());
 app.use("/public", express.static(path.join(__dirname, "public")));
 
-//punch in landing page method:
-app.get("/", (_, res) => {
-  return res.render("punchIn", {
-    title: "PunchIn/Out-system",
-  });
-});
 //error page if employee login on desktop :
 app.get("/errorpage", (_, res) => {
   return res.render("errorpage", {
-    title: "error",
+    title: "Error",
   });
 });
+
 //List of employess :
 const employees = {
   "000": "Priyank",
@@ -52,10 +48,22 @@ const employees = {
   "009": "Thejasri",
 };
 
+//punch in landing page method:
+app.get("/", (_, res) => {
+  return res.render("punchIn", {
+    title: "PunchIn/Out-system",
+  });
+});
+
 //punch in submit method:
 app.post("/", async (req, res) => {
   //if data is empty it will not store the data into db instead it will redirect to the home page
-  if (req.body.id === "") return res.redirect("/");
+  if (
+    req.body.id === "" ||
+    req.body.passkey === "" ||
+    req.body.passkey !== process.env.PASS_KEY
+  )
+    return res.redirect("/");
   //current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
@@ -74,7 +82,6 @@ app.post("/", async (req, res) => {
       const response = await axios.get(api);
       results = JSON.stringify(response.data.results[0].formatted_address);
     } catch (error) {
-      console.error(error.response.data);
       return res.redirect("/?e=error");
     }
   };
@@ -95,7 +102,6 @@ app.post("/", async (req, res) => {
     userAgentMobileOrDesktop +
     "," +
     req.useragent.source;
-
   //Database connection:
   mongoose.connect(url, async (_, db) => {
     const databaseConnection = db.collection("punching");
@@ -122,7 +128,7 @@ app.post("/", async (req, res) => {
           }
         );
       } else {
-        //undates data nestedly for previously stored data:
+        //Undates data nestedly for previously stored data:
         databaseConnection.updateOne(
           { _id: findResult._id },
           {
@@ -136,12 +142,12 @@ app.post("/", async (req, res) => {
         );
       }
     } else {
-      // insert the data id is as new entry:
+      // Insert the data id is as new entry:
       databaseConnection.insertOne(formData, () => {
         db.close;
       });
     }
-
+    //Sending the name,punchDetails,IP_address,location,userAgent as massage to slack :
     // An access token (from your Slack app or custom integration - xoxp, xoxb)
     const token = process.env.SLACK_API_KEY;
 
@@ -163,7 +169,54 @@ app.post("/", async (req, res) => {
     return res.redirect("/?e=success");
   });
 });
-
+//Admin landing page :
+app.get("/admin", (_, res) => {
+  return res.render("admin", {
+    title: "Admin",
+    punchDetailsfromDatabase: [],
+  });
+});
+//Posting the form data for history page :
+app.post("/admin", (req, res) => {
+  //secret code not matched to exact code i will redirect to the home page it will not execute the rest of the code:
+  if (req.body.secretcode !== process.env.SECRET_CODE)
+    return res.redirect("/admin");
+  //moment() will converting the input date format to database date formate:
+  const finalDateFormat = moment(req.body.date, "YYYY-MM-DD")
+    .format("MM/DD/YYYY")
+    .replace(/\b0/g, "");
+  mongoose.connect(url, async (_, db) => {
+    const databaseConnection = db.collection("punching");
+    //id exists in database it will fetch the document :
+    try {
+      const idResultsFromDatabase = await databaseConnection.findOne(
+        {
+          id: { $eq: req.body.id },
+        },
+        { $exists: true }
+      );
+      //array of punch details :
+      const punchDetailsfromDatabase =
+        idResultsFromDatabase[finalDateFormat]["current_date_obj"];
+      //redering the punchIn/Out details from database :
+      return res.render("admin", {
+        title: "Admin",
+        recardDetails: `Record for ${employees[req.body.id] || "Unknown"} on ${
+          req.body.date
+        } : `,
+        punchDetailsfromDatabase: punchDetailsfromDatabase,
+      });
+    } catch (e) {
+      //Returns the error message if date not existed
+      return res.render("admin", {
+        title: "Admin",
+        errorMsgForDateNotExisted: `The Record for ${
+          employees[req.body.id] || "Unknown"
+        } on ${req.body.date} is Not Existed.`,
+      });
+    }
+  });
+});
 //server is running at this port:
 app.listen(port, hostname, () => {
   return console.log(`server is running at http://${hostname}:${port}`);
