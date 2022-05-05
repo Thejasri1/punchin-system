@@ -11,11 +11,11 @@ html
 			form#adminformId(action="/admin" method="POST")
 				label(for="secretcode") Secret Key :
 				br
-				input(type="password" name='secretcode',value="" id="secretinputId" class="historypage-form-input-elements" placeholder="Secret Key" required="" oninvalid="this.setCustomValidity('Please Enter valid secret code')" oninput="this.setCustomValidity('')")
+				input(type="password" name='secretcode',value="" id="secretinputId" class="historypage-form-input-elements" placeholder="Secret Key" required)
 				br
 				label(for="id") ID :
 				br
-				input(type='text' name='id' value="" id="idInput" class="historypage-form-input-elements" placeholder="ID" required="" oninvalid="this.setCustomValidity('Please Enter The ID')" oninput="this.setCustomValidity('')")
+				input(type='text' name='id' value="" id="idInput" class="historypage-form-input-elements" placeholder="ID" required)
 				br
 				label(for="date") Date:
 				br

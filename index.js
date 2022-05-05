@@ -58,7 +58,11 @@ app.get("/", (_, res) => {
 //punch in submit method:
 app.post("/", async (req, res) => {
   //if data is empty it will not store the data into db instead it will redirect to the home page
-  if (req.body.passkey !== process.env.PASS_KEY)
+  if (
+    req.body.id.trim() === "" ||
+    req.body.passkey.trim() === "" ||
+    req.body.passkey.trim() !== process.env.PASS_KEY
+  )
     return res.redirect("/?e=error");
 
   //current time :
@@ -102,7 +106,9 @@ app.post("/", async (req, res) => {
   //Database connection:
   mongoose.connect(url, async (_, db) => {
     const databaseConnection = db.collection("punching");
-    const findResult = await databaseConnection.findOne({ id: req.body.id });
+    const findResult = await databaseConnection.findOne({
+      id: req.body.id.trim(),
+    });
     //find results :
     if (findResult) {
       //Update data for existed Id for only current date:
@@ -176,19 +182,22 @@ app.get("/admin", (_, res) => {
 //Posting the form data for history page :
 app.post("/admin", (req, res) => {
   //secret code not matched to exact code i will redirect to the home page it will not execute the rest of the code:
-  if (req.body.secretcode !== process.env.SECRET_CODE)
+
+  if (req.body.secretcode.trim() !== process.env.SECRET_CODE)
     return res.redirect("/admin");
   //moment() will converting the input date format to database date formate:
   const finalDateFormat = moment(req.body.date, "YYYY-MM-DD")
     .format("MM/DD/YYYY")
-    .replace(/\b0/g, "");
+    .replace(/\b0/g, "")
+    .trim();
   mongoose.connect(url, async (_, db) => {
     const databaseConnection = db.collection("punching");
+    const requestedId = req.body.id.trim();
     //id exists in database it will fetch the document :
     try {
       const idResultsFromDatabase = await databaseConnection.findOne(
         {
-          id: { $eq: req.body.id },
+          id: { $eq: requestedId },
         },
         { $exists: true }
       );
