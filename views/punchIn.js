@@ -102,10 +102,7 @@ const sendErrorNotifcation = () => {
     position: "right top",
   });
 };
-if (localStorage.getItem("passKey") !== "wework") {
-  sendErrorNotifcation();
-  window.history.pushState({}, "", "/");
-}
+
 //Handling the success and error message notifications :
 const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());

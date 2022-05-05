@@ -58,12 +58,9 @@ app.get("/", (_, res) => {
 //punch in submit method:
 app.post("/", async (req, res) => {
   //if data is empty it will not store the data into db instead it will redirect to the home page
-  if (
-    req.body.id === "" ||
-    req.body.passkey === "" ||
-    req.body.passkey !== process.env.PASS_KEY
-  )
-    return res.redirect("/");
+  if (req.body.passkey !== process.env.PASS_KEY)
+    return res.redirect("/?e=error");
+
   //current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
@@ -128,7 +125,7 @@ app.post("/", async (req, res) => {
           }
         );
       } else {
-        //Undates data nestedly for previously stored data:
+        //Updates data nestedly for previously stored data:
         databaseConnection.updateOne(
           { _id: findResult._id },
           {
@@ -212,7 +209,7 @@ app.post("/admin", (req, res) => {
         title: "Admin",
         errorMsgForDateNotExisted: `The Record for ${
           employees[req.body.id] || "Unknown"
-        } on ${req.body.date} is Not Existed.`,
+        } on ${req.body.date} is does not exist.`,
       });
     }
   });

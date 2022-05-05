@@ -1,11 +1,8 @@
-const navigationToHomeFun = () => {
-  window.location = "/";
-};
-//Loading the current_date to date input :
-const dateDefaultValue = (document.getElementById("dateInputId").value =
-  new Date().toISOString().slice(0, -14));
-//Storing the input values into Local Storage :
 window.addEventListener("load", function () {
+  //Loading the current_date to date input :
+  const dateDefaultValue = (document.getElementById("dateInputId").value =
+    new Date().toISOString().slice(0, -14));
+  //Storing the input values into Local Storage :
   document.getElementById("secretinputId").value =
     localStorage.getItem("secretkey");
   document.getElementById("idInput").value = localStorage.getItem("adminpgId");
