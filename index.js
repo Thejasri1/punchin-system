@@ -69,7 +69,7 @@ app.post("/", async (req, res) => {
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
   const formData = {
-    id: req.body.id,
+    id: req.body.id.trim(),
     [new Date().toLocaleDateString()]: {
       current_date_obj: [{ "Punch In": current_time_obj }],
     },
@@ -152,21 +152,21 @@ app.post("/", async (req, res) => {
     }
     //Sending the name,punchDetails,IP_address,location,userAgent as massage to slack :
     // An access token (from your Slack app or custom integration - xoxp, xoxb)
-    const token = process.env.SLACK_API_KEY;
+    // const token = process.env.SLACK_API_KEY;
 
-    const web = new WebClient(token);
+    // const web = new WebClient(token);
 
-    // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-    const conversationId = process.env.CONVERSATION_ID;
+    // // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
+    // const conversationId = process.env.CONVERSATION_ID;
 
-    await web.chat.postMessage({
-      channel: conversationId,
-      text: `User : ${employees[req.body.id] || "Unknown"} \n ${
-        latestEntry === "Punch In" ? "Punch Out" : "Punch In"
-      } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
-        req.body.long
-      }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
-    });
+    // await web.chat.postMessage({
+    //   channel: conversationId,
+    //   text: `User : ${employees[req.body.id] || "Unknown"} \n ${
+    //     latestEntry === "Punch In" ? "Punch Out" : "Punch In"
+    //   } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
+    //     req.body.long
+    //   }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
+    // });
 
     //after executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");
@@ -207,7 +207,7 @@ app.post("/admin", (req, res) => {
       //redering the punchIn/Out details from database :
       return res.render("admin", {
         title: "Admin",
-        recardDetails: `Record for ${employees[req.body.id] || "Unknown"} on ${
+        recardDetails: `Record for ${employees[requestedId] || "Unknown"} on ${
           req.body.date
         } : `,
         punchDetailsfromDatabase: punchDetailsfromDatabase,
@@ -217,7 +217,7 @@ app.post("/admin", (req, res) => {
       return res.render("admin", {
         title: "Admin",
         errorMsgForDateNotExisted: `The Record for ${
-          employees[req.body.id] || "Unknown"
+          employees[requestedId] || "Unknown"
         } on ${req.body.date} is does not exist.`,
       });
     }
