@@ -6,7 +6,7 @@ const isMobile = /iPhone|iPad|IEMobile|iphone SE|Android/i.test(
 // }
 var acc = document.getElementsByClassName("accordion");
 var i;
-//accordion for home page getting the ids of employees :
+//Accordion for home page getting the ids of employees :
 for (i = 0; i < acc.length; i++) {
   acc[i].addEventListener("click", function () {
     this.classList.toggle("active");
@@ -18,7 +18,7 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 }
-//spinner logic:
+//Spinner logic:
 const spinner = () => {
   document.getElementById("loader").classList.toggle("loader");
 };
@@ -51,7 +51,7 @@ window.addEventListener("load", function () {
     }
   };
 });
-//getting the latitude longitude :
+//Getting the latitude longitude :
 const getLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
@@ -64,7 +64,7 @@ const showPosition = (position) => {
   document.getElementById("long").value = position.coords.longitude;
 };
 getLocation();
-//success message notification :
+//Success message notification :
 const sendNotifcation = () => {
   new Notify({
     status: "success",

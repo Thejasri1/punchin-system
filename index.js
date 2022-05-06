@@ -16,18 +16,18 @@ const port = 3000;
 
 dotenv.config();
 
-//local database connection url
+//Local database connection url
 const url = "mongodb://localhost:27017/TJS";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//pug connection view engine
+//Pug connection view engine
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 app.use(useragent.express());
 app.use("/public", express.static(path.join(__dirname, "public")));
 
-//error page if employee login on desktop :
+//Error page if employee login on desktop :
 app.get("/errorpage", (_, res) => {
   return res.render("errorpage", {
     title: "Error",
@@ -48,16 +48,16 @@ const employees = {
   "009": "Thejasri",
 };
 
-//punch in landing page method:
+//Punch in landing page method:
 app.get("/", (_, res) => {
   return res.render("punchIn", {
     title: "PunchIn/Out-system",
   });
 });
 
-//punch in submit method:
+//Punch in submit method:
 app.post("/", async (req, res) => {
-  //if data is empty it will not store the data into db instead it will redirect to the home page
+  //If data is empty it will not store the data into db instead it will redirect to the home page
   if (
     req.body.id.trim() === "" ||
     req.body.passkey.trim() === "" ||
@@ -65,7 +65,7 @@ app.post("/", async (req, res) => {
   )
     return res.redirect("/?e=error");
 
-  //current time :
+  //Current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
   const requestedEmployeeId = req.body.id.trim();
@@ -76,7 +76,7 @@ app.post("/", async (req, res) => {
     },
   };
   let latestEntry = undefined;
-  //location of the employee:
+  //Location of the employee:
   const api = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${req.body.lat},${req.body.long}&key=${process.env.GOOGLE_API_KEY}`;
   let results;
   const getAddressByReverseCoding = async () => {
@@ -91,7 +91,7 @@ app.post("/", async (req, res) => {
   //IP Address :
   const clientIp = requestIp.getClientIp(req);
 
-  //userAgent :
+  //UserAgent :
   const userAgentMobileOrDesktop =
     req.useragent.isMobile === true ? "Mobile" : "Desktop";
   const userAgentDetails =
@@ -110,7 +110,7 @@ app.post("/", async (req, res) => {
     const findResult = await databaseConnection.findOne({
       id: requestedEmployeeId,
     });
-    //find results :
+    //Find results :
     if (findResult) {
       //Update data for existed Id for only current date:
       if (findResult[new Date().toLocaleDateString()]) {
@@ -169,7 +169,7 @@ app.post("/", async (req, res) => {
       }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
     });
 
-    //after executing the all the process it will redirect it home page :
+    //After executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");
   });
 });
@@ -182,11 +182,11 @@ app.get("/admin", (_, res) => {
 });
 //Posting the form data for history page :
 app.post("/admin", (req, res) => {
-  //secret code not matched to exact code i will redirect to the home page it will not execute the rest of the code:
+  //Secret code not matched to exact code i will redirect to the home page it will not execute the rest of the code:
 
   if (req.body.secretcode.trim() !== process.env.SECRET_CODE)
     return res.redirect("/admin");
-  //moment() will converting the input date format to database date formate:
+  //Moment() will converting the input date format to database date formate:
   const finalDateFormat = moment(req.body.date, "YYYY-MM-DD")
     .format("MM/DD/YYYY")
     .replace(/\b0/g, "")
@@ -194,7 +194,7 @@ app.post("/admin", (req, res) => {
   mongoose.connect(url, async (_, db) => {
     const databaseConnection = db.collection("punching");
     const requestedId = req.body.id.trim();
-    //id exists in database it will fetch the document :
+    //Id exists in database it will fetch the document :
     try {
       const idResultsFromDatabase = await databaseConnection.findOne(
         {
@@ -202,15 +202,15 @@ app.post("/admin", (req, res) => {
         },
         { $exists: true }
       );
-      //array of punch details :
+      //Array of punch details :
       const punchDetailsfromDatabase =
         idResultsFromDatabase[finalDateFormat]["current_date_obj"];
-      //redering the punchIn/Out details from database :
+      //Redering the punchIn/Out details from database :
       return res.render("admin", {
         title: "Admin",
-        recardDetails: `Record for ${employees[requestedId] || "Unknown"} on ${
-          req.body.date
-        } : `,
+        recardDetails: `Record for ${
+          employees[requestedId] || "Unknown"
+        } on ${finalDateFormat} : `,
         punchDetailsfromDatabase: punchDetailsfromDatabase,
       });
     } catch (e) {
@@ -219,12 +219,12 @@ app.post("/admin", (req, res) => {
         title: "Admin",
         errorMsgForDateNotExisted: `The Record for ${
           employees[requestedId] || "Unknown"
-        } on ${req.body.date} is does not exist.`,
+        } on ${finalDateFormat} is does not exist.`,
       });
     }
   });
 });
-//server is running at this port:
+//Server is running at this port:
 app.listen(port, hostname, () => {
   return console.log(`server is running at http://${hostname}:${port}`);
 });

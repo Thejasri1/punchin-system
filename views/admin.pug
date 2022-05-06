@@ -5,7 +5,7 @@ html
 			include ./punch.css
 	body
 		div(class="logo-container")
-			a(href="/")
+			a(href="/" class="logo-navigation")
 				img(src="./public/images/banner.png" class="logo")
 		div(class="history-page-container")
 			form#adminformId(action="/admin" method="POST")
@@ -22,10 +22,11 @@ html
 				input(type="date" name='date' value=dateDefaultValue id="dateInputId" class="historypage-form-input-elements" placeholder="MM/DD/YYYY")
 				br
 				button(type="submit" id="btnIDForHistory" class="historypage-submit-btn") Submit
+		h4(class="recard-details-caption")= recardDetails
 		div(class="db-results-container")
-			h4(class="recard-details-caption")= recardDetails
 			if errorMsgForDateNotExisted
 				p(class="errorMsg")= errorMsgForDateNotExisted
+				img(src="./public/images/errorImage.png" class="errorImageForAdmin")
 			else
 				each item in punchDetailsfromDatabase
 					each val,key in item
