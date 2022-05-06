@@ -17,7 +17,7 @@ const port = 3000;
 dotenv.config();
 
 //Local database connection url
-const url = "mongodb://localhost:27017/TJS";
+const url = process.env.DB_URL;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -52,6 +52,7 @@ const employees = {
 app.get("/", (_, res) => {
   return res.render("punchIn", {
     title: "PunchIn/Out-system",
+    app_env: process.env.APP_ENV,
   });
 });
 

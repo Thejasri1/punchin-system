@@ -1,9 +1,12 @@
 const isMobile = /iPhone|iPad|IEMobile|iphone SE|Android/i.test(
   window.navigator.userAgent
 );
-// if (!isMobile) {
-//   window.location = "/errorpage";
-// }
+
+const app_env = document.getElementById("app_env").value;
+if (!isMobile && app_env !== "dev") {
+  window.location = "/errorpage";
+}
+
 var acc = document.getElementsByClassName("accordion");
 var i;
 //Accordion for home page getting the ids of employees :
