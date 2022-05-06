@@ -68,8 +68,9 @@ app.post("/", async (req, res) => {
   //current time :
   let current_time_obj = new Date().toLocaleTimeString();
   //Form Data:
+  const requestedEmployeeId = req.body.id.trim();
   const formData = {
-    id: req.body.id.trim(),
+    id: requestedEmployeeId,
     [new Date().toLocaleDateString()]: {
       current_date_obj: [{ "Punch In": current_time_obj }],
     },
@@ -107,7 +108,7 @@ app.post("/", async (req, res) => {
   mongoose.connect(url, async (_, db) => {
     const databaseConnection = db.collection("punching");
     const findResult = await databaseConnection.findOne({
-      id: req.body.id.trim(),
+      id: requestedEmployeeId,
     });
     //find results :
     if (findResult) {
@@ -152,21 +153,21 @@ app.post("/", async (req, res) => {
     }
     //Sending the name,punchDetails,IP_address,location,userAgent as massage to slack :
     // An access token (from your Slack app or custom integration - xoxp, xoxb)
-    // const token = process.env.SLACK_API_KEY;
+    const token = process.env.SLACK_API_KEY;
 
-    // const web = new WebClient(token);
+    const web = new WebClient(token);
 
-    // // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-    // const conversationId = process.env.CONVERSATION_ID;
+    // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
+    const conversationId = process.env.CONVERSATION_ID;
 
-    // await web.chat.postMessage({
-    //   channel: conversationId,
-    //   text: `User : ${employees[req.body.id] || "Unknown"} \n ${
-    //     latestEntry === "Punch In" ? "Punch Out" : "Punch In"
-    //   } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
-    //     req.body.long
-    //   }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
-    // });
+    await web.chat.postMessage({
+      channel: conversationId,
+      text: `User : ${employees[requestedEmployeeId] || "Unknown"} \n ${
+        latestEntry === "Punch In" ? "Punch Out" : "Punch In"
+      } : ${current_time_obj} \n Location: ${results},${req.body.lat},${
+        req.body.long
+      }\n IP Address: ${clientIp} \n User Agent: ${userAgentDetails}`,
+    });
 
     //after executing the all the process it will redirect it home page :
     return res.redirect("/?e=success");
