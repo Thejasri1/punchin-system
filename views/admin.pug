@@ -1,0 +1,37 @@
+html
+	head
+		title= title
+		style
+			include ./punch.css
+	body
+		div(class="logo-container")
+			a(href="/" class="logo-navigation")
+				img(src="./public/images/banner.png" class="logo")
+		div(class="history-page-container")
+			form#adminformId(action="/admin" method="POST")
+				label(for="secretcode") Secret Key :
+				br
+				input(type="password" name='secretcode',value="" id="secretinputId" class="historypage-form-input-elements" placeholder="Secret Key" required)
+				br
+				label(for="id") ID :
+				br
+				input(type='text' name='id' value="" id="idInput" class="historypage-form-input-elements" placeholder="ID" required)
+				br
+				label(for="date") Date:
+				br
+				input(type="date" name='date' value=dateDefaultValue id="dateInputId" class="historypage-form-input-elements" placeholder="MM/DD/YYYY")
+				br
+				button(type="submit" id="btnIDForHistory" class="historypage-submit-btn") Submit
+		h4(class="recard-details-caption")= recardDetails
+		div(class="db-results-container")
+			if errorMsgForDateNotExisted
+				p(class="errorMsg")= errorMsgForDateNotExisted
+				img(src="./public/images/errorImage.png" class="errorImageForAdmin")
+			else
+				each item in punchDetailsfromDatabase
+					each val,key in item
+						p= key + ' : ' + val
+	script
+		include admin.js
+
+

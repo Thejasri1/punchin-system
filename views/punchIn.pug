@@ -3,12 +3,8 @@ html
 		title= title
 		link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css")
 		script(src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js")
-		
-
-		style 
+		style
 			include ./punch.css
-	  
-		
 	body
 		div(class="logo-container")
 			img(src="./public/images/banner.png" class="logo")
@@ -22,8 +18,8 @@ html
 						th Name
 					tr
 						td 000
-						td Priyank  
-					tr 
+						td Priyank
+					tr
 						td 001
 						td Chetna
 					tr
@@ -34,7 +30,7 @@ html
 						td Sridhar
 					tr
 						td 004
-						td Nikunj 
+						td Nikunj
 					tr
 						td 005
 						td Jayanth
@@ -49,7 +45,8 @@ html
 						td Omprakash
 					tr
 						td 009
-						td Thejasri     
+						td Thejasri
+				a(href="/admin", class="employee-history" id="emp-history") Admin
 		div(class="container-element")
 			form#formSubmit(action="/" method="POST")
 				label(for="idField") Enter The ID :
@@ -64,10 +61,16 @@ html
   				type='text'
   				name='id',value="" id="inputId" placeholder="Id" class="form-control")
 				br
+				label(for="parseKeyField") Enter The Pass Key :
+				br
+				input(
+  				type='password'
+  				name='passkey',value="" id="passKeyId" placeholder="Pass Key" class="form-control")
+				br
 				button(type="submit" id="formId" class="btn")
-				
 			div(id="loader")
-				
+		input(
+  		type='hidden'
+  		value=app_env id="app_env")
 		script
 			include punchIn.js
-		
